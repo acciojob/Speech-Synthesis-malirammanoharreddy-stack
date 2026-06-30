@@ -37,6 +37,46 @@
   const stopButton = document.querySelector('#stop');
 
   //Your code goes here
+	const synth = window.speechSynthesis; // Line 2 -> speaking/cancelling
+
+	function populateVoice(){
+		voices = synth.getVoices();
+
+		for(let voice of voices){
+			const option = document.createElement("option");
+			option.value = voice.name;
+			option.textContent = `${voice.name} - ${voice.lang}`
+
+			if(voice.default){
+				option.textContent += " - DEFAULT"
+			}
+			
+			voicesDropdown.append(option);
+		}
+	}
+
+	setTimeout(() => populateVoice(), 1000)
+	// if (speechSynthesis.onvoiceschanged !== undefined) {
+	//   speechSynthesis.onvoiceschanged = populateVoiceList;
+	// }
+	
+	speakButton.addEventListener("click", () => {
+		msg.rate = options[0].value;
+		msg.pitch = options[1].value;
+		msg.text = options[2].value;
+		for(let voice of voices){
+			if(voicesDropdown.value === voice.name){
+				msg.voice = voice;
+			}
+		}
+		// console.log(voicesDropdown.value)
+		synth.speak(msg)
+	})
+	
+	stopButton.addEventListener("click", function () {
+		synth.cancel();
+	})
+
 </script>
 
 </body>
